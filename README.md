@@ -4,7 +4,12 @@ My personal OpenCode/coding agents setup.
 ## Usage
 
 ```bash
-git clone https://github.com/andrewkoumoudjian/personnal-setup.git
+curl -fsSL https://raw.githubusercontent.com/andrewkoumoudjian/personnal-setup/main/install.sh | bash
+```
+
+If you already cloned the repo:
+
+```bash
 cd personnal-setup
 chmod +x install.sh
 ./install.sh
