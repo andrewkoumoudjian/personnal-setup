@@ -18,7 +18,7 @@ chmod +x install.sh
 ## What it does
 
 - Installs Homebrew packages and casks (macOS only)
-- Copies `.opencode` into `~/.opencode`
+- Copies `.opencode` into `~/.opencode` (downloads if missing)
 - Installs oh-my-zsh, atuin, nvm, uv, and Rust
 - Generates an SSH key if needed (set `SSH_EMAIL` or you’ll be prompted)
 

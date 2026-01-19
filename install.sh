@@ -126,6 +126,18 @@ fi
 print_info "Installing Homebrew Casks"
 for pkg in "${CASKS[@]}"; do
     print_info "Checking package ${pkg}"
+    case "${pkg}" in
+        raycast)
+            app_path="/Applications/Raycast.app"
+            ;;
+        *)
+            app_path="/Applications/${pkg}.app"
+            ;;
+    esac
+    if [ -d "${app_path}" ]; then
+        print_success "${pkg} app already present"
+        continue
+    fi
     if ! brew list --cask "${pkg}" &>/dev/null; then
         print_info "Installing ${pkg}"
         brew install --cask "${pkg}"
@@ -139,19 +151,38 @@ print_success "Homebrew packages"
 # --- OpenCode dotfiles
 print_info "Configuring OpenCode dotfiles"
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+WORK_DIR=$(pwd)
+OPENCODE_SOURCE=""
+
 if [ -d "${SCRIPT_DIR}/.opencode" ]; then
-    if [ -e "${HOME}/.opencode" ]; then
-        print_info "Backing up existing .opencode directory"
-        mv "${HOME}/.opencode" "${HOME}/.opencode.backup.$(date +%Y%m%d_%H%M%S)"
-    fi
-    print_info "Copying OpenCode dotfiles"
-    mkdir -p "${HOME}/.opencode"
-    cp -a "${SCRIPT_DIR}/.opencode/." "${HOME}/.opencode/"
-    print_success "OpenCode dotfiles installed"
+    OPENCODE_SOURCE="${SCRIPT_DIR}/.opencode"
+elif [ -d "${WORK_DIR}/.opencode" ]; then
+    OPENCODE_SOURCE="${WORK_DIR}/.opencode"
 else
-    print_error ".opencode directory not found in repo"
-    exit 1
+    print_info "Downloading .opencode from GitHub"
+    temp_dir=$(mktemp -d)
+    curl -fsSL "https://codeload.github.com/andrewkoumoudjian/personnal-setup/tar.gz/main" | tar -xz -C "${temp_dir}"
+    if [ -d "${temp_dir}/personnal-setup-main/.opencode" ]; then
+        mkdir -p "${WORK_DIR}/.opencode"
+        cp -a "${temp_dir}/personnal-setup-main/.opencode/." "${WORK_DIR}/.opencode/"
+        OPENCODE_SOURCE="${WORK_DIR}/.opencode"
+    else
+        print_error "Unable to locate .opencode in downloaded archive"
+        rm -rf "${temp_dir}"
+        exit 1
+    fi
+    rm -rf "${temp_dir}"
 fi
+
+if [ -e "${HOME}/.opencode" ]; then
+    print_info "Backing up existing .opencode directory"
+    mv "${HOME}/.opencode" "${HOME}/.opencode.backup.$(date +%Y%m%d_%H%M%S)"
+fi
+
+print_info "Copying OpenCode dotfiles"
+mkdir -p "${HOME}/.opencode"
+cp -a "${OPENCODE_SOURCE}/." "${HOME}/.opencode/"
+print_success "OpenCode dotfiles installed"
 
 # --- SSH key
 if [ "${INTERACTIVE}" = true ] && [ ! -f "${HOME}/.ssh/id_ed25519" ]; then
