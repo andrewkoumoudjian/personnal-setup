@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "theme": "orng",
+  "autoupdate": true,
+  "instructions": ["{env:HOME}/.config/opencode/INSTRUCTIONS.md"],
+  "mcp": {
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "enabled": false,
+    },
+    "cloudflare-docs": {
+      "type": "remote",
+      "url": "https://docs.mcp.cloudflare.com/mcp",
+    },
+    "google-workspace": {
+      "type": "remote",
+      "url": "https://google-workspace-mcp.cto.cfdata.org/mcp",
+      "oauth": {},
+      "enabled": false,
+    },
+    "cloudflare-builds": {
+      "type": "remote",
+      "url": "https://builds.mcp.cloudflare.com/mcp",
+      "oauth": {},
+      "enabled": false,
+    },
+    "cloudflare-observability": {
+      "type": "remote",
+      "url": "https://observability.mcp.cloudflare.com/mcp",
+      "oauth": {},
+      "enabled": false,
+    },
+  },
+  "agent": {
+    "write": {
+      "description": "reviews, edits and drafts longer-form content in my voice.",
+      "model": "anthropic/claude-opus-4-5",
+      "mode": "primary",
+      "color": "#F5B638",
+      "permission": {
+        "bash": "deny",
+      },
+      "prompt": "You review, edit, and draft longer-form prose. Use the imperative mood. Prefer AP style and American English. Avoid marketing speak - no 'perfect for', 'empowers you to', or 'modernization'. Em-dashes are OK; semi-colons less so. Be concise and avoid walls of text. Lead with the problem or context before the solution. Use 'we' for collaboration; 'you' to address the reader. Keep paragraphs short - 2-4 sentences max. Explain why, not just what. Link liberally to sources, docs, and references. Use bullet points over numbered lists unless order matters. Be direct and opinionated; acknowledge tradeoffs honestly. Use bold for key phrases that anchor an argument. Reframe complex points to aid readers in comprehension. Use rhetorical questions sparingly to drive a point home.",
+    },
+  },
+}
