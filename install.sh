@@ -140,12 +140,13 @@ print_success "Homebrew packages"
 print_info "Configuring OpenCode dotfiles"
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 if [ -d "${SCRIPT_DIR}/.opencode" ]; then
-    if [ -e "${HOME}/.opencode" ] && [ ! -L "${HOME}/.opencode" ]; then
+    if [ -e "${HOME}/.opencode" ]; then
         print_info "Backing up existing .opencode directory"
         mv "${HOME}/.opencode" "${HOME}/.opencode.backup.$(date +%Y%m%d_%H%M%S)"
     fi
-    print_info "Linking OpenCode dotfiles"
-    ln -sfn "${SCRIPT_DIR}/.opencode" "${HOME}/.opencode"
+    print_info "Copying OpenCode dotfiles"
+    mkdir -p "${HOME}/.opencode"
+    cp -a "${SCRIPT_DIR}/.opencode/." "${HOME}/.opencode/"
     print_success "OpenCode dotfiles installed"
 else
     print_error ".opencode directory not found in repo"
